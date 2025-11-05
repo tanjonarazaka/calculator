@@ -1,14 +1,49 @@
-let num1, num2, operator, tempVal;
+let num1, num2, operator, tempNum, result, isSecondReady, firstOperatorReady;
+isSecondReady = firstOperatorReady = false;
+
 
 let disp = document.querySelector(".display");
 
 let valToDisplay = document.createElement("p");
-valToDisplay.textContent = "";
 
-// let ops = document.querySelectorAll("operator");
-// ops.forEach((op) => op.addEventListener("click", () => {
+console.log(num1);
 
-// }));
+displayDigits();
+
+
+
+
+let ops = document.querySelectorAll(".operator");
+ops.forEach((op) => op.addEventListener("click", () => {
+    let symbol = op.innerHTML;
+    
+    
+    if(operator === undefined) {
+        operator = symbol;
+        // console.log(`op: ${operator}`);
+        firstOperatorReady = true;
+    } 
+    
+    else if (firstOperatorReady && symbol !== "=") {
+        result = operate(operator, num1, num2);
+        num1 = Math.round(result);
+        // console.log(num1);
+        operator = symbol;
+    }
+
+    isSecondReady = true;
+    valToDisplay.textContent = "";
+
+
+    
+    if(symbol === "=" && num1 !== undefined && num2 !== undefined) {
+        result = operate(operator, num1, num2);
+
+        //check whether the denomitor is 0 then throw undefined on the screen
+        if(result === "Undefined") valToDisplay.textContent = result;
+        else valToDisplay.textContent = Math.round(result);
+    }
+}));
 
 function add(num1, num2) {
     return num1 + num2;
@@ -33,16 +68,17 @@ function divide(num1, num2) {
 }
 
 function operate(operator, num1, num2) {
-
-    if(operator === "+") {
-        return add(num1, num2);
-    } else if(operator === "+") {
-        return subtract(num1, num2);
-    } else if(operator === "+") {
-        return multiply(num1, num2);
-    } else if(operator === "/") {
-        return divide(num1, num2);
+    switch(operator) {
+        case "+": 
+            return add(num1, num2);
+        case "-": 
+            return subtract(num1, num2);
+        case "*": 
+            return multiply(num1, num2);
+        case "/": 
+            return divide(num1, num2);
     }
+
 }
 
 function displayDigits() {
@@ -50,41 +86,62 @@ function displayDigits() {
 
 
     digits.forEach((digit) => digit.addEventListener("click", () => {
-        if(digit.innerHTML === "0") {
-            valToDisplay.textContent += "0";
-        } else if(digit.innerHTML === "1") {
-            valToDisplay.textContent += "1";
-        } else if(digit.innerHTML === "2") {
-            valToDisplay.textContent += "2";
-        } else if(digit.innerHTML === "3") {
-            valToDisplay.textContent += "3";
-        } else if(digit.innerHTML === "4") {
-            valToDisplay.textContent += "4";
-        } else if(digit.innerHTML === "5") {
-            valToDisplay.textContent += "5";
-        } else if(digit.innerHTML === "6") {
-            valToDisplay.textContent += "6";
-        } else if(digit.innerHTML === "7") {
-            valToDisplay.textContent += "7";
-        } else if(digit.innerHTML === "8") {
-            valToDisplay.textContent += "8";
-        } else if(digit.innerHTML === "9") {
-            valToDisplay.textContent += "9";
+        
+        switch(digit.innerHTML) {
+            case "0":
+                valToDisplay.textContent += "0";
+                break;
+            case "1":
+                valToDisplay.textContent += "1";
+                break;
+            case "2":
+                valToDisplay.textContent += "2";
+                break;
+            case "3":
+                valToDisplay.textContent += "3";
+                break;
+            case "4":
+                valToDisplay.textContent += "4";
+                break;
+            case "5":
+                valToDisplay.textContent += "5";
+                break;
+            case "6":
+                valToDisplay.textContent += "6";
+                break;
+            case "7":
+                valToDisplay.textContent += "7";
+                break;
+            case "8":
+                valToDisplay.textContent += "8";
+                break;
+            case "9":
+                valToDisplay.textContent += "9";
+                break;
+        }
+        
+        tempNum = +valToDisplay.innerHTML;
+
+        if(isSecondReady) {
+            num2 = tempNum;
+            // console.log(`num2: ${num2}`);
+        } else { 
+            num1 = tempNum; 
+            // console.log(`num1: ${num1}`);
         }
     }));
 
-    tempVal = +valToDisplay.innerHTML;
     disp.appendChild(valToDisplay);
-
-
 }
+
 
 let clearBtn = document.querySelector(".clear-btn");
 
 clearBtn.addEventListener("click", () => {
+    num1 = num2 = operator = undefined; 
+    isSecondReady = false;
+    firstOperatorReady = false;
     valToDisplay.textContent = "";
 });
 
 
-displayDigits();
-// console.log(tempVal);
