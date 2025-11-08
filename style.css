@@ -1,0 +1,48 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    /* padding-top: 100px; */
+}
+
+.display {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    border: 2px solid black;
+    padding: 0 15px;
+    width: 248px;
+    height: 80px;
+    font-size: 30px;
+    margin-top: 10px; 
+}
+
+.display p {
+    margin: 0;
+}
+
+.button-container {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+}
+
+.digit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.digit, .operator, .clear-btn {
+    margin: 5px;
+    font-size: 30px;
+}
+
+.operator-container {
+    display: flex;
+    flex-direction: column;
+}

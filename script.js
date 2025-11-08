@@ -1,6 +1,6 @@
 let num1, num2, operator, tempNum, result;
-let isSecondNumReady, firstOperatorSet, shouldClearDisplay;
-isSecondNumReady = firstOperatorSet = shouldClearDisplay = false;
+let firstNumSet, operatorSet, secondNumSet, shouldClearDisplay;
+firstNumSet = operatorSet = shouldClearDisplay = secondNumSet = resultDisplayed = false;
 
 let disp = document.querySelector(".display");
 
@@ -10,53 +10,60 @@ let clearBtn = document.querySelector(".clear-btn");
 
 displayDigits();
 
-clearBtn.addEventListener("click", clear);
+clearBtn.addEventListener("click", clearAll);
 
 let ops = document.querySelectorAll(".operator");
 ops.forEach((op) => op.addEventListener("click", () => {
     let symbol = op.innerHTML;
     
+    if(!secondNumSet && operatorSet) return;
+
     if(operator === undefined && symbol !== "=") {
         operator = symbol;
         // console.log(`op: ${operator}`);
-        firstOperatorSet = true;
+        operatorSet = true;
         shouldClearDisplay = true;
     } 
     
-    else if (firstOperatorSet && symbol !== "=") {
+    else if (operatorSet && symbol !== "=") {
         result = operate(operator, num1, num2);
         num1 = Math.round(result);
+
         num2 = undefined;
+        secondNumSet = false;
+        
+
         operator = symbol;
+
         shouldClearDisplay = true;
 
-        if(result === "Undefined") {
-            alert("undefined");
-            clear();
+        if(result === "undefined") {
+            alert("Undefined");
+            clearAll();
         } else {
             valToDisplay.textContent = num1;
         }
-        
     }
 
-    isSecondNumReady = true;
-    // valToDisplay.textContent = "";
+    firstNumSet = true;
 
-
-    
-    if(symbol === "=" && num1 !== undefined && num2 !== undefined) {
+    if(symbol === "=" && firstNumSet && secondNumSet) {
         result = operate(operator, num1, num2);
 
         //check whether the denominator is 0 then throw undefined on the screen
-        if(result === "Undefined") {
-            alert("undefined");
-            clear();
+        if(result === "undefined") {
+            alert("Undefined");
+            clearAll();
         } else {
             valToDisplay.textContent = Math.round(result);
         }
 
         shouldClearDisplay = true;
+        resultDisplayed = true;        
     }
+
+    console.log(`num1: ${num1}`);
+    console.log(`num2: ${num2}`);
 
     console.log(`operator: ${operator}`)
 }));
@@ -70,6 +77,11 @@ function displayDigits() {
         if(shouldClearDisplay) {
             valToDisplay.textContent = "";
             shouldClearDisplay = false;
+        }
+
+        if(resultDisplayed) {
+            clearResult();
+            resultDisplayed = false;
         }
         
         switch(digit.innerHTML) {
@@ -107,23 +119,27 @@ function displayDigits() {
         
         tempNum = +valToDisplay.innerHTML;
 
-        if(isSecondNumReady) {
+        if(firstNumSet) {
             num2 = tempNum;
-            // console.log(`num2: ${num2}`);
+            secondNumSet = true;
         } else { 
             num1 = tempNum; 
-            // console.log(`num1: ${num1}`);
         }
     }));
 
     disp.appendChild(valToDisplay);
 }
 
-function clear() {
-    num1 = num2 = operator = undefined; 
-    isSecondNumReady = false;
-    firstOperatorSet = false;
+function clearAll() {
+    clearResult();
     valToDisplay.textContent = "";
+}
+
+function clearResult() {
+    num1 = num2 = operator = undefined; 
+    firstNumSet = false;
+    // secondNumSet = false;
+    operatorSet = false;
 }
 
 function add(num1, num2) {
@@ -142,7 +158,7 @@ function divide(num1, num2) {
     if(num1 === 0) {
         return 0;
     } else if(num2 === 0) {
-        return "Undefined";
+        return "undefined";
     }
 
     return num1 / num2;
