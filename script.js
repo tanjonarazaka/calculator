@@ -18,54 +18,65 @@ ops.forEach((op) => op.addEventListener("click", () => {
     
     if(!secondNumSet && operatorSet) return;
 
-    if(operator === undefined && symbol !== "=") {
-        operator = symbol;
-        // console.log(`op: ${operator}`);
-        operatorSet = true;
-        shouldClearDisplay = true;
+    if(operatorSet && resultDisplayed) {
+        firstNumSet = true;
+        resultDisplayed = false;
     } 
-    
-    else if (operatorSet && symbol !== "=") {
-        result = operate(operator, num1, num2);
-        num1 = Math.round(result);
 
-        num2 = undefined;
-        secondNumSet = false;
+    else {
+        if(!operatorSet && symbol !== "=") {
+            operator = symbol;
+            operatorSet = true;
+            shouldClearDisplay = true;
+        } 
         
+        else if (operatorSet && symbol !== "=") {
+            result = operate(operator, num1, num2);
+            num1 = Number(result.toFixed(2));
 
-        operator = symbol;
+            num2 = undefined;
+            secondNumSet = false;
 
-        shouldClearDisplay = true;
+            operator = symbol;
 
-        if(result === "undefined") {
-            alert("Undefined");
-            clearAll();
-        } else {
-            valToDisplay.textContent = num1;
-        }
-    }
+            if(result === "undefined") {
+                alert("Undefined");
+                clearAll();
+            } else {
+                valToDisplay.textContent = num1;
+            }
 
-    firstNumSet = true;
-
-    if(symbol === "=" && firstNumSet && secondNumSet) {
-        result = operate(operator, num1, num2);
-
-        //check whether the denominator is 0 then throw undefined on the screen
-        if(result === "undefined") {
-            alert("Undefined");
-            clearAll();
-        } else {
-            valToDisplay.textContent = Math.round(result);
+            shouldClearDisplay = true;
         }
 
-        shouldClearDisplay = true;
-        resultDisplayed = true;        
-    }
+        firstNumSet = true;
 
-    console.log(`num1: ${num1}`);
-    console.log(`num2: ${num2}`);
+        if(symbol === "=" && firstNumSet && secondNumSet) {
+            result = operate(operator, num1, num2);
+            num1 = Number(result.toFixed(2));
 
-    console.log(`operator: ${operator}`)
+            //check whether the denominator is 0 then throw undefined on the screen
+            if(result === "undefined") {
+                alert("Undefined");
+                clearAll();
+            } else {
+                valToDisplay.textContent = num1;
+                // valToDisplay.textContent = Number(result.toFixed(2));
+            }
+
+            shouldClearDisplay = true;
+            resultDisplayed = true; 
+            
+            num2 = undefined;
+            secondNumSet = false;
+
+        }
+
+        console.log(`num1: ${num1}`);
+        console.log(`num2: ${num2}`);
+
+        console.log(`operator: ${operator}`);
+    }   
 }));
 
 
@@ -138,7 +149,7 @@ function clearAll() {
 function clearResult() {
     num1 = num2 = operator = undefined; 
     firstNumSet = false;
-    // secondNumSet = false;
+    secondNumSet = false;
     operatorSet = false;
 }
 
