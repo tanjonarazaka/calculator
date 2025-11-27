@@ -1,6 +1,8 @@
-let num1, num2, operator, tempNum, result;
+let num1, num2, operator, tempNum, result, dotCounter;
 let firstNumSet, operatorSet, secondNumSet, shouldClearDisplay, resultDisplayed;
 firstNumSet = operatorSet = shouldClearDisplay = secondNumSet = resultDisplayed = false;
+
+dotCounter = 0;
 
 let disp = document.querySelector(".display");
 
@@ -17,7 +19,10 @@ ops.forEach((op) => op.addEventListener("click", () => {
     let symbol = op.innerHTML;
 
     // If user hasn't typed num1 yet, do nothing (should not happen but safe)
-    if(!firstNumSet) firstNumSet = true; 
+    if(!firstNumSet) {
+        firstNumSet = true;
+        dotCounter = 0;
+    }
 
     // Avoid issue with pressing oporator without operands
     if(!firstNumSet && symbol !== "=") return;
@@ -63,6 +68,8 @@ ops.forEach((op) => op.addEventListener("click", () => {
         num2 = undefined;
         secondNumSet = false;
 
+        dotCounter = 0;
+
         // store new operator
         operator = symbol;
         shouldClearDisplay = true;
@@ -88,10 +95,22 @@ ops.forEach((op) => op.addEventListener("click", () => {
         num2 = undefined;
         secondNumSet = false;
 
+        dotCounter = 0;
+
         shouldClearDisplay = true;
         return;
     }
 }));
+
+let backspace = document.querySelector(".backspace");
+backspace.addEventListener("click", () => {
+    if(valToDisplay.textContent !== ""){
+        valToDisplay.textContent = valToDisplay.textContent.slice(0, -1);
+    } else if(valToDisplay.textContent === "") {
+        return;
+    }
+
+});
 
 
 function displayDigits() {
@@ -108,7 +127,14 @@ function displayDigits() {
             valToDisplay.textContent = "";
             resultDisplayed = false;
         }
-        
+
+        if(digit.innerHTML === "." && dotCounter === 0){
+            dotCounter = 1;
+        }
+        else if(digit.innerHTML === "." && dotCounter > 0){
+            return;
+        }
+
         valToDisplay.textContent += digit.innerHTML;
         
         let current = Number(valToDisplay.textContent);
@@ -131,6 +157,7 @@ function clearAll() {
 
 function clearResult() {
     num1 = num2 = operator = undefined; 
+    dotCounter = 0;
     firstNumSet = false;
     secondNumSet = false;
     operatorSet = false;

@@ -37,7 +37,7 @@ body{
     align-items: center;
 }
 
-.digit, .operator, .clear-btn {
+.digit, .operator, .clear-btn, .backspace{
     margin: 5px;
     font-size: 30px;
 }
